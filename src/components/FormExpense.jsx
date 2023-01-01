@@ -1,31 +1,54 @@
-import React, { useContext } from 'react'
-import { AppContext } from '../contexts/AppProvider';
+import React from 'react'
+import { useForm } from 'react-hook-form'
 
 export default function FormExpense(props) {
-  const { inputValues: { name, amount, date } } = useContext(AppContext);
+  const { register, handleSubmit } = useForm();
+
+
   return (
     <form
-      onSubmit={e => { e.preventDefault() }}
+      onSubmit={handleSubmit(props.onSubmit)}
       className="flex flex-col w-full">
-      <Input
-        placeholder="Enter name here..."
-        type="text"
-        value={name}
-        name="Name" />
-      <Input
-        placeholder="Enter amount here..."
-        type="text"
-        value={amount}
-        name="Amount" />
-      <Input
-        type="date"
-        value={date}
-        name="Date" />
+      <label className="flex justify-between items-center my-2">
+        <div className="text-white font-bold w-28">Name</div>
+        <input
+          defaultValue={props.defaultValues ? props.defaultValues.name : ""}
+          className="flex-1 max-w-[550px] py-2 px-4 rounded-md"
+          type="text"
+          placeholder="Enter name here..."
+          {...register("name", { required: true })}
+        />
+      </label>
+      <label className="flex justify-between items-center my-2">
+        <div className="text-white font-bold w-28">Amount</div>
+        <input
+          defaultValue={props.defaultValues ? props.defaultValues.amount : ""}
+          className="flex-1 max-w-[550px] py-2 px-4 rounded-md"
+          type="text"
+          placeholder="Enter amount here..."
+          {...register("amount", {
+            required: true,
+            valueAsNumber: true,
+            pattern: {
+              value: /^(0|[1-9]\d*)(\.\d+)?$/
+            },
+          })}
+        />
+      </label>
+      <label className="flex justify-between items-center my-2">
+        <div className="text-white font-bold w-28">Date</div>
+        <input
+          defaultValue={props.defaultValues ? props.defaultValues.date : ""}
+          className="flex-1 max-w-[550px] py-2 px-4 rounded-md"
+          type="date"
+          {...register("date", { required: true })}
+        />
+      </label>
       <div className="flex justify-end items-center mt-4">
         {props.children}
         <div
           className="btn bg-slate-300 text-gray-600"
-          onClick={() => props.onSubmit("cancel")}>
+          onClick={() => { props.setDisplay(false) }}>
           CANCEL
         </div>
       </div >
@@ -34,29 +57,3 @@ export default function FormExpense(props) {
 }
 
 
-function Input(props) {
-  const { setInputValues } = useContext(AppContext);
-
-
-  function handleChange(e) {
-    setInputValues((prev) => ({
-      ...prev,
-      [e.target.name.toLowerCase()]: e.target.value
-    }))
-  }
-
-
-  return (
-    <label className="flex justify-between items-center my-2">
-      <div className="text-white font-bold w-28">{props.name}</div>
-      <input
-        onChange={handleChange}
-        value={props.value}
-        name={props.name}
-        className="flex-1 max-w-[550px] py-2 px-4 rounded-md"
-        type={props.type}
-        placeholder={props.placeholder}
-      />
-    </label>
-  )
-}

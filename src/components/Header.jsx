@@ -7,44 +7,40 @@ import axios from 'axios';
 
 export default function Header() {
   const [isAdding, setIsAdding] = useState(false);
-  const {
-    inputValues: { name, amount, date },
-    resetInputValues,
-    setExpenses
-  } = useContext(AppContext);
+  const { setExpenses } = useContext(AppContext);
 
 
-  function handleSubmit(type) {
+  function handleSubmit(data) {
     setIsAdding(false)
-    if (type === "add") {
-      setExpenses((prev) => ([
-        ...prev,
-        {
-          _id: uuid(),
-          name,
-          date,
-          amount: Number(amount)
-        }
-      ]))
-      axios.post(`${URL_BASE}/api/expenses`, {
+    const { name, date, amount } = data;
+    setExpenses((prev) => ([
+      ...prev,
+      {
+        _id: uuid(),
         name,
         date,
         amount: Number(amount)
-      })
-    }
-    resetInputValues();
+      }
+    ]))
+    axios.post(`${URL_BASE}/api/expenses`, {
+      name,
+      date,
+      amount: Number(amount)
+    })
   }
 
   return (
     <div className="w-[500px] md:w-[800px] py-6 px-8 bg-purple-primary rounded-md mx-auto max-w-[90%] flex justify-center items-center mt-8">
       {
         isAdding ?
-          <FormExpense onSubmit={handleSubmit}>
-            <div
-              className="btn bg-purple-secondary text-white mr-4"
-              onClick={() => handleSubmit("add")}>
+          <FormExpense
+            setDisplay={setIsAdding}
+            onSubmit={handleSubmit}>
+            <button
+              type='submit'
+              className="btn bg-purple-secondary text-white mr-4">
               ADD
-            </div>
+            </button>
           </FormExpense>
           :
           <div

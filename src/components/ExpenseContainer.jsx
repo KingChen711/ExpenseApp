@@ -112,7 +112,7 @@ function ChartItem(props) {
 
 
 function ExpenseItem(props) {
-  const { setExpenses, setInputValues, setExpenseEditingId } = useContext(AppContext)
+  const { setExpenses, setExpenseEditingId } = useContext(AppContext)
   const { _id, date, name, amount } = props.data;
   const { month, year, day } = getDataDate(date);
 
@@ -131,13 +131,6 @@ function ExpenseItem(props) {
 
   function handleEditExpense() {
     props.setIsEditing(true);
-    setInputValues(() => {
-      return {
-        name,
-        amount: String(amount),
-        date
-      }
-    })
     setExpenseEditingId(_id);
   }
 

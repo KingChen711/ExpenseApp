@@ -6,13 +6,8 @@ import axios from "axios"
 export const AppContext = React.createContext()
 
 export default function AppProvider({ children }) {
-  const [year, setYear] = useState(`2022`);
+  const [year, setYear] = useState(`2023`);
   const [expenseEditingId, setExpenseEditingId] = useState();
-  const [inputValues, setInputValues] = useState({
-    name: "",
-    amount: "",
-    date: ""
-  });
   const [expenses, setExpenses] = useState()
   const [chartData, setChartData] = useState([{
     month: "Jan",
@@ -111,19 +106,9 @@ export default function AppProvider({ children }) {
   }, [year, expenses])
 
 
-  function resetInputValues() {
-    setInputValues({
-      name: "",
-      amount: "",
-      date: ""
-    })
-  }
 
   return (
     <AppContext.Provider value={{
-      inputValues,
-      setInputValues,
-      resetInputValues,
       year,
       setYear,
       expenses,
